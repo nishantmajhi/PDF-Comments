@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>PDF Comments</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header id="header">
+        <span id="app-name">PDF Comments</span>
+      </header>
+
+      <!-- State: not a PDF tab -->
+      <div id="state-not-pdf" class="state-panel hidden">
+        <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+          <rect x="7" y="4" width="22" height="30" rx="2.5" stroke="#CBD5E1" stroke-width="1.8" />
+          <path d="M25 4v9h9" stroke="#CBD5E1" stroke-width="1.8" stroke-linejoin="round" />
+          <circle cx="33" cy="33" r="9" fill="#FEF2F2" stroke="#FCA5A5" stroke-width="1.5" />
+          <path d="M30 30l6 6M36 30l-6 6" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        <p class="state-title">No PDF open</p>
+        <p class="state-sub">Navigate to a PDF file in this tab,<br />then click the extension icon again.</p>
+      </div>
+
+      <!-- State: loading -->
+      <div id="state-loading" class="state-panel hidden">
+        <div id="spinner"></div>
+        <p class="state-sub">Reading annotations…</p>
+      </div>
+
+      <!-- State: error -->
+      <div id="state-error" class="state-panel hidden">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <circle cx="18" cy="18" r="15" fill="#FEF2F2" stroke="#FCA5A5" stroke-width="1.5" />
+          <path d="M18 11v8M18 21v2" stroke="#EF4444" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        <p id="error-title" class="state-title" style="color: #ef4444">Error</p>
+        <p id="error-body" class="state-sub"></p>
+      </div>
+
+      <!-- State: no comments -->
+      <div id="state-empty" class="state-panel hidden">
+        <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+          <rect x="7" y="4" width="22" height="30" rx="2.5" stroke="#94A3B8" stroke-width="1.8" />
+          <path d="M25 4v9h9" stroke="#94A3B8" stroke-width="1.8" stroke-linejoin="round" />
+          <path d="M13 16h10M13 21h10M13 26h6" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        <p class="state-title">No comments found</p>
+        <p class="state-sub">This PDF has no embedded annotation comments.</p>
+      </div>
+
+      <!-- Toolbar -->
+      <div id="toolbar" class="hidden">
+        <div id="search-wrap">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <circle cx="6" cy="6" r="4" stroke="#94A3B8" stroke-width="1.4" />
+            <path d="M9.5 9.5L13 13" stroke="#94A3B8" stroke-width="1.4" stroke-linecap="round" />
+          </svg>
+          <input id="search-input" type="text" placeholder="Search comments…" />
+        </div>
+        <div id="toolbar-right">
+          <label class="sort-label" for="sort-select">Sort</label>
+          <select id="sort-select">
+            <option value="page">by page</option>
+            <option value="date">by date</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Stats / author filters -->
+      <div id="stats-bar" class="hidden">
+        <span id="stats-text"></span>
+        <div id="filter-authors"></div>
+      </div>
+
+      <!-- Comments list -->
+      <div id="comments-container" class="hidden">
+        <div id="comments-list"></div>
+        <div id="no-results" class="hidden">
+          <p>No comments match your search.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comment card template -->
+    <template id="tpl-comment">
+      <div class="comment-card">
+        <div class="comment-header">
+          <div class="comment-avatar"></div>
+          <div class="comment-meta">
+            <span class="comment-author"></span>
+            <span class="comment-date"></span>
+          </div>
+          <button class="page-pill hidden">
+            <span class="pill-label"></span>
+            <svg class="pill-icon" width="13" height="13" viewBox="0 0 11 11" fill="none">
+              <path d="M4.5 2H2a1 1 0 00-1 1v6a1 1 0 001 1h6a1 1 0 001-1V6.5" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" />
+              <path d="M7 1h3v3M10 1L6 5" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
+        <div class="comment-subject"></div>
+        <div class="comment-body"></div>
+        <div class="comment-replies"></div>
+      </div>
+    </template>
+
+    <!-- Reply template -->
+    <template id="tpl-reply">
+      <div class="reply-card">
+        <div class="reply-header">
+          <div class="reply-avatar"></div>
+          <span class="reply-author"></span>
+          <span class="reply-date"></span>
+        </div>
+        <div class="reply-body"></div>
+      </div>
+    </template>
+
+    <script src="pdf-parser.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>
